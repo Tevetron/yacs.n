@@ -11,7 +11,6 @@ import json
 import time
 import re
 from itertools import chain
-import ci_scraper as ci
 import multiprocessing
 from selenium.webdriver.common.keys import Keys
 import goldy_parse as gp
@@ -289,42 +288,12 @@ def check_to_scrape(year: int) -> list[str]:
     return to_check
 
 '''
-Single process scrape. Largely unnecessary because we can just use num_browsers = 1 in the multiprocess function but it's nice to have.
-'''
-def scrape_courses(year: int, pdf_name: str, json_path: str):
-    driver = webdriver.Firefox()
-    driver.implicitly_wait(2)
-    to_check = check_to_scrape(year)
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    pdf_path = os.path.join(dir_path, 'pdfs', pdf_name)
-    cis = ci.parse_pdf(pdf_path)
-    all_courses = dict()
-    for course in to_check:
-        prefix, code = course.split(" ")
-        if 'X' in code:
-            [to_check.append(prefix + " " + code.replace("X", str(i))) for i in range(0, 10)]
-            to_check.remove(course)
-    for course in to_check:
-        prefix, code = course.split(" ")
-        course_data = scrape_single_course(driver, prefix, code, cis)
-        if len(course_data.keys()) == 0:
-            continue
-        all_courses[course_data["name"]] = course_data
-
-    out = json.dumps(all_courses, indent= 4)
-    print(out)
-    with open(json_path, 'w') as f:
-        f.write(out)
-    driver.quit()
-
-'''
 Uses multiprocessing to open multiple browsers to scrape all necessary courses.
 '''
 def multi_process_scrape(year: int, pdf_name: str, json_path: str, num_browsers: int):
     to_check = check_to_scrape(year)
     dir_path = os.path.dirname(os.path.realpath(__file__))
     pdf_path = os.path.join(dir_path, 'pdfs', pdf_name)
-    cis = ci.parse_pdf(pdf_path) # uses the pdf scraper to find all communication intensive courses
     all_courses = dict()
     for course in to_check:
         prefix, code = course.split(" ")
@@ -363,7 +332,6 @@ For testing.
 if __name__ == "__main__":
     dir_path = os.path.dirname(os.path.realpath(__file__))
     pdf_path = os.path.join(dir_path, 'pdfs', 'fall2024-ci.pdf')
-    #cis = ci.parse_pdf(pdf_path)
     #multi_process_scrape(2025, pdf_path, "courses.json", 6)
     driver = webdriver.Firefox()
     term = "202409"

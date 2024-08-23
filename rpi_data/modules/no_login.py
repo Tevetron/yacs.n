@@ -9,7 +9,6 @@ from selenium.webdriver.firefox.options import Options
 import multiprocessing
 import new_parse as old
 import courses_scraper as cs
-import ci_scraper as cis
 import goldy_parse as gold
 import regex as re
 import os
