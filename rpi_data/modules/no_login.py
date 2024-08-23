@@ -1,3 +1,7 @@
+<<<<<<< Updated upstream
+=======
+import sys
+>>>>>>> Stashed changes
 import requests
 from bs4 import BeautifulSoup as bs
 from concurrent.futures import ThreadPoolExecutor
@@ -368,7 +372,17 @@ def add_goldy_info(course: Course, goldy_info: dict):
         course.raw = "Prerequisites: " + goldy_info[checking]
         
 if __name__ == "__main__":
+<<<<<<< Updated upstream
     no_login_scrape("202409", 15)
+=======
+    argc = len(sys.argv)
+    if argc != 3:
+        print("Usage: python3 no_login.py [term] [num_browsers]")
+        sys.exit(1)
+    term = sys.argv[1]
+    num_browsers = int(sys.argv[2])
+    no_login_scrape(term, num_browsers)
+>>>>>>> Stashed changes
     #driver = webdriver.Firefox()
     #print(cs.scrape_single_course(driver, "CSCI", "1100", 202409))
     #print(link_scrape("202409", "https://sis.rpi.edu/rss/bwckctlg.p_disp_listcrse?term_in=202409&subj_in=CHME&crse_in=4980&schd_in=L", "CHME"))

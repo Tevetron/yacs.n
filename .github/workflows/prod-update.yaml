@@ -2,7 +2,7 @@ name: Semester Data Update
 
 on:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 jobs:
@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        semester: [summer-2023]
+        semester: [202409]
 
     steps:
       - name: Checkout repository
@@ -29,13 +29,11 @@ jobs:
       - name: Install parser dependencies
         run: pip install -r requirements.txt
         working-directory: rpi_data/modules
-
-      - name: Get course data
-        run: bash $SCRIPT_NAME
-        working-directory: rpi_data
-        env:
-          SCRIPT_NAME: get-${{ matrix.semester }}.sh
-
+      
+      - name: run parser
+        run: python3 no_login.py ${{ matrix.semester }} 15
+        working-directory: rpi_data/modules
+        
       - name: Update prod
         run: |
           curl -X POST -H "Content-Type: multipart/form-data" -F "isPubliclyVisible=on" -F "file=@$FILE_NAME" -A "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0" $AUTH_ARGS $API_ENDPOINT
