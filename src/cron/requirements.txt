@@ -1,6 +1,7 @@
-selenium
-bs4
-pypdf
-pandas
-requests
-regex
+python3-selenium
+python3-bs4
+python3-pypdf
+python3-pandas
+python3-requests
+python3-regex
+python3-crontab
